@@ -1,4 +1,3 @@
-# $Revision: 1.21 $, $Date: 2011/07/16 18:25:43 $
 Summary:	Open Chinese Convert library
 Summary(pl.UTF-8):	Biblioteka Open Chinese Convert do konwersji między wariantami języka chińskiego
 Name:		opencc
