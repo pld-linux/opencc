@@ -1,13 +1,13 @@
 Summary:	Open Chinese Convert library
 Summary(pl.UTF-8):	Biblioteka Open Chinese Convert do konwersji między wariantami języka chińskiego
 Name:		opencc
-Version:	0.3.0
+Version:	0.4.0
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: http://code.google.com/p/opencc/downloads/list
 Source0:	http://opencc.googlecode.com/files/%{name}-%{version}.tar.gz
-# Source0-md5:	84462870e5d491da24bb33a5fb494911
+# Source0-md5:	00a2de2314cd28fc8631c229fb3aa894
 URL:		http://code.google.com/p/opencc/
 BuildRequires:	cmake >= 2.8
 BuildRequires:	gettext-devel
