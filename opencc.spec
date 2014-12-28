@@ -10,7 +10,7 @@ Source0:	http://opencc.googlecode.com/files/%{name}-%{version}.tar.gz
 # Source0-md5:	e803b4419872c97d984d25544eef2951
 URL:		http://code.google.com/p/opencc/
 BuildRequires:	cmake >= 2.8
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	rpmbuild(macros) >= 1.603
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
