@@ -1,17 +1,21 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+
 Summary:	Open Chinese Convert library
 Summary(pl.UTF-8):	Biblioteka Open Chinese Convert do konwersji między wariantami języka chińskiego
 Name:		opencc
-Version:	0.4.3
+Version:	1.0.6
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
-#Source0Download: http://code.google.com/p/opencc/downloads/list
-Source0:	http://opencc.googlecode.com/files/%{name}-%{version}.tar.gz
-# Source0-md5:	e803b4419872c97d984d25544eef2951
-URL:		http://code.google.com/p/opencc/
+#Source0Download: https://github.com/BYVoid/OpenCC/releases
+Source0:	https://github.com/BYVoid/OpenCC/archive/ver.%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	bcb6d42f6f0eedabaf95c71627f725a9
+URL:		https://github.com/BYVoid/OpenCC
 BuildRequires:	cmake >= 2.8
-BuildRequires:	gettext-tools
-BuildRequires:	rpmbuild(macros) >= 1.603
+BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -31,6 +35,7 @@ Summary:	Header files for OpenCC library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki OpenCC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	libstdc++-devel >= 6:4.7
 
 %description devel
 Header files for OpenCC library.
@@ -51,23 +56,35 @@ Static OpenCC library.
 Statyczna biblioteka OpenCC.
 
 %prep
-%setup -q
+%setup -q -n OpenCC-ver.%{version}
 
 %build
+%if %{with static_libs}
+install -d build-static
+cd build-static
+%cmake .. \
+	-DBUILD_SHARED_LIBS=OFF
+
+%{__make}
+cd ..
+%endif
+
 install -d build
 cd build
-%cmake .. \
-	-DENABLE_GETTEXT=ON
+%cmake ..
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with static_libs}
+%{__make} -C build-static install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,16 +92,15 @@ rm -rf $RPM_BUILD_ROOT
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files
 %defattr(644,root,root,755)
 %doc AUTHORS NEWS.md README.md
 %attr(755,root,root) %{_bindir}/opencc
 %attr(755,root,root) %{_bindir}/opencc_dict
+%attr(755,root,root) %{_bindir}/opencc_phrase_extract
 %attr(755,root,root) %{_libdir}/libopencc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopencc.so.1
+%attr(755,root,root) %ghost %{_libdir}/libopencc.so.2
 %{_datadir}/%{name}
-%{_mandir}/man1/opencc.1*
-%{_mandir}/man1/opencc_dict.1*
 
 %files devel
 %defattr(644,root,root,755)
@@ -92,6 +108,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/opencc
 %{_pkgconfigdir}/opencc.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libopencc.a
+%endif
