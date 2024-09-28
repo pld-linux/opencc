@@ -1,3 +1,4 @@
+# TODO: darts (-DENABLE_DARTS, -DUSE_SYSTEM_DARTS)
 #
 # Conditional build:
 %bcond_without	static_libs	# static library
@@ -6,20 +7,20 @@
 Summary:	Open Chinese Convert library
 Summary(pl.UTF-8):	Biblioteka Open Chinese Convert do konwersji między wariantami języka chińskiego
 Name:		opencc
-Version:	1.1.7
+Version:	1.1.9
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/BYVoid/OpenCC/releases
 Source0:	https://github.com/BYVoid/OpenCC/archive/ver.%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f1f1f71722ae9e107a2ec4fc29c69619
-Patch0:		%{name}-paths.patch
+# Source0-md5:	925baef9aac4bcf609f09d09c92f19e6
 URL:		https://github.com/BYVoid/OpenCC
 BuildRequires:	cmake >= 3.5
 BuildRequires:	libstdc++-devel >= 6:5
 BuildRequires:	marisa-devel >= 0.2.6
 BuildRequires:	rapidjson-devel >= 1.1.0
 BuildRequires:	rpmbuild(macros) >= 1.605
+BuildRequires:	tclap
 %if %{with python}
 BuildRequires:	python3-devel >= 1:3.2
 BuildRequires:	python3-pybind11 >= 2.10.0
@@ -66,7 +67,6 @@ Statyczna biblioteka OpenCC.
 
 %prep
 %setup -q -n OpenCC-ver.%{version}
-%patch0 -p1
 
 %build
 %if %{with static_libs}
@@ -75,7 +75,8 @@ cd build-static
 %cmake .. \
 	-DBUILD_SHARED_LIBS=OFF \
 	-DUSE_SYSTEM_MARISA=ON \
-	-DUSE_SYSTEM_RAPIDJSON=ON
+	-DUSE_SYSTEM_RAPIDJSON=ON \
+	-DUSE_SYSTEM_TCLAP=ON
 
 %{__make} -j1
 cd ..
@@ -87,7 +88,8 @@ cd build
 	%{?with_python:-DBUILD_PYTHON=ON} \
 	-DUSE_SYSTEM_MARISA=ON \
 	-DUSE_SYSTEM_PYBIND11=ON \
-	-DUSE_SYSTEM_RAPIDJSON=ON
+	-DUSE_SYSTEM_RAPIDJSON=ON \
+	-DUSE_SYSTEM_TCLAP=ON
 
 %{__make} -j1
 
